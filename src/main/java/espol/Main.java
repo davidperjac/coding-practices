@@ -2,44 +2,74 @@ package espol;
 
 import java.util.Scanner;
 
-import exceptions.NumbersOfTravelersExceeded;
-
 public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+	public static void main(String[] args) {
 
-        System.out.println("Introduce el destino de la vacación: ");
-        String destination = scanner.nextLine();
+		Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Introduce el número de viajeros: ");
-        int numberOfTravelers = scanner.nextInt();
+		String destination;
+		do {
+			System.out.println("Enter the destination place: ");
+			destination = scanner.nextLine();
+		} while (!validDestination(destination));
 
-        System.out.println("Introduce la duración de la vacación en días: ");
-        int durationInDays = scanner.nextInt();
+		String numberOfTravelers;
+		do {
+			System.out.println("Enter the number of Travelers: ");
+			numberOfTravelers = scanner.nextLine();
+		} while (!validNumberOfTravelers(numberOfTravelers));
 
-        try {
-            Destination destinationObj = new Destination(destination);
+		String durationInDays;
+		do {
+			System.out.println("Enter the duration in days: ");
+			durationInDays = scanner.nextLine();
+		} while (!validNumber(durationInDays, "days"));
 
-            VacationPackage vacationPackage = new VacationPackage(numberOfTravelers, destinationObj, durationInDays);
+		Destination destinationObj = new Destination(destination);
+		VacationPackage vacationPackage = new VacationPackage(Integer.parseInt(numberOfTravelers), destinationObj,
+				Integer.parseInt(durationInDays));
 
-            double cost = vacationPackage.calculateCost();
-            System.out.println("El costo del paquete de vacaciones es: $" + cost);
-        } catch (NumbersOfTravelersExceeded e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error al calcular el costo del paquete de vacaciones. Puede ser un error de entrada.");
-        }
-    }
+		double cost = vacationPackage.calculateCost();
+		System.out.println("==================================\n" + "The cost of the vacation package is: $" + cost
+				+ "\n==================================");
+		scanner.close();
+	}
 
-    private static boolean isValidInput(int numberOfTravelers, int durationInDays,  String destinationObj) {
-        if (numberOfTravelers <= 0 || durationInDays <= 0) {
-            return false;
-        }
+	public static boolean validNumber(String number, String variable) {
+		if (!number.isEmpty() || number.matches("\\d+")) {
+			if (Integer.parseInt(number) <= 0) {
+				System.out.println("==================\n" + "The number of " + variable
+						+ " must be greater than or equal to zero" + "\n==================");
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			System.out.println("==================\n" + "The input is not valid" + "\n==================");
+			return false;
+		}
+	}
 
-        if (destinationObj == null) {
-            return false;
-        }
+	public static boolean validNumberOfTravelers(String numberOfTravelers) {
+		if (validNumber(numberOfTravelers, "travelers")) {
+			if (Integer.parseInt(numberOfTravelers) > 80) {
+				System.out.println("==================\n" + "The vacation package is not available "
+						+ "for groups of more than 80 people" + "\n==================");
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
+	}
 
-        return true;
-    }
+	public static boolean validDestination(String destination) {
+		if (destination.isEmpty() || !destination.matches(".*\\w.*")) {
+			System.out.println("==================\n" + "The destination is not valid\n" + "==================");
+			return false;
+		} else {
+			return true;
+		}
+	}
 }

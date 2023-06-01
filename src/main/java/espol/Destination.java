@@ -20,5 +20,5 @@ public class Destination {
 			return cost;
 		}
 	}
-	
+
 }
