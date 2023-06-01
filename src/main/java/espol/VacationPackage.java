@@ -5,7 +5,7 @@
 package espol;
 
 public final class VacationPackage {
-    private int         numTravelers;
+    private int         numberOfTravelers;
     private Destination destination;
     private int         durationInDays;
 
@@ -21,7 +21,7 @@ public final class VacationPackage {
      */
     public VacationPackage(final int travelers, final Destination destination,
             final int duration) {
-        this.numTravelers   = travelers;
+        this.numberOfTravelers   = travelers;
         this.destination    = destination;
         this.durationInDays = duration;
     }
@@ -36,8 +36,13 @@ public final class VacationPackage {
 
         totalCost += destination.calculateAddtionalCost();
         totalCost += calculateGroupDiscount(totalCost);
-        totalCost -= calculatePenaltyFee();
-        totalCost += calculatePromotionPolicy();
+        totalCost += calculatePenaltyFee();
+        totalCost -= calculatePromotionPolicy();
+
+
+        if (numberOfTravelers > 80) {
+            throw new NumbersOfTravelersExceeded("No se pueden agregar más de 80 personas al paquete de vacaciones.");
+        }
 
         return totalCost;
     }

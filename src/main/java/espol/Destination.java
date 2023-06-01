@@ -2,13 +2,9 @@ package espol;
 
 public class Destination {
 	private String name;
-	private int popularity;
-	private int additionalCost;
 
-	public Destination(String name, int popularity, int additionalCost) {
+	public Destination(String name) {
 		this.name = name;
-		this.popularity = popularity;
-		this.additionalCost = additionalCost;
 	}
 
 	public double calculateAddtionalCost() {

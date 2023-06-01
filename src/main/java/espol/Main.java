@@ -4,33 +4,30 @@ import java.util.Scanner;
 
 import exceptions.NumbersOfTravelersExceeded;
 
-public final class Main {
-    final static Scanner sc = new Scanner(System.in);
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-    public static void main(final String... args)
-            throws NumbersOfTravelersExceeded {
-        final int    numTravelers    = askInt(
-                "Enter the number of travelers: ");
-        final String destinationName = askString("Enter the destination: ");
-        final int    duration        = askInt("Enter duration (in days): ");
+        System.out.println("Introduce el destino de la vacación:");
+        String destination = scanner.nextLine();
 
-        // FIXME: invoke destination correctly
-        final VacationPackage vacationPackage = new VacationPackage(
-                numTravelers, null, duration);
-        // vacationPackage.calculateCost();
+        System.out.println("Introduce el número de viajeros:");
+        int numTravelers = scanner.nextInt();
 
-        // handle 80 travelers limit using created Exception
-        // handle the -1 input thing
-        // ensure accurate data (regex?)
+        System.out.println("Introduce la duración de la vacación en días:");
+        int durationInDays = scanner.nextInt();
 
-    }
+        try {
+            Destination destinationObj = new Destination(destination, 0, 0);
 
-    private static String askString(final String prompt) {
-        System.out.print(prompt);
-        return sc.nextLine();
-    }
+            VacationPackage vacationPackage = new VacationPackage(numTravelers, destinationObj, durationInDays);
 
-    private static int askInt(final String prompt) {
-        return Integer.parseInt(askString(prompt));
+            double cost = vacationPackage.calculateCost();
+            System.out.println("El costo del paquete de vacaciones es: $" + cost);
+        } catch (NumbersOfTravelersExceeded e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error al calcular el costo del paquete de vacaciones. Puede ser un error de entrada.");
+        }
     }
 }
