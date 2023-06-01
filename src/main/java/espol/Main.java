@@ -36,19 +36,20 @@ public class Main {
 	}
 
 	public static boolean validNumber(String number, String variable) {
-		if (!number.isEmpty() || number.matches("\\d+")) {
-			if (Integer.parseInt(number) <= 0) {
-				System.out.println("==================\n" + "The number of " + variable
-						+ " must be greater than or equal to zero" + "\n==================");
-				return false;
-			} else {
-				return true;
-			}
-		} else {
-			System.out.println("==================\n" + "The input is not valid" + "\n==================");
-			return false;
-		}
+	    if (!number.isEmpty() && number.matches("\\d+") && !number.contains(".")) {
+	        if (Integer.parseInt(number) <= 0) {
+	            System.out.println("==================\n" + "The number of " + variable
+	                    + " must be greater than zero" + "\n==================");
+	            return false;
+	        } else {
+	            return true;
+	        }
+	    } else {
+	        System.out.println("==================\n" + "The input is not valid" + "\n==================");
+	        return false;
+	    }
 	}
+
 
 	public static boolean validNumberOfTravelers(String numberOfTravelers) {
 		if (validNumber(numberOfTravelers, "travelers")) {
