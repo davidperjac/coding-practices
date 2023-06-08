@@ -1,15 +1,22 @@
 /*
- * Copyright (C) 2023, Juan Antonio González, Washington Cotera, David Pérez, Fernando Buchelli
+ * Copyright (C) 2023
+ * Juan Antonio González, Washington Cotera, David Pérez, Fernando Buchelli
  */
 
 package espol;
 
-public final class VacationPackage {
-	private int numberOfTravelers;
-	private Destination destination;
-	private int durationInDays;
+import java.util.List;
+import java.util.LinkedList;
 
-	private final int BASE_COST = 1000;
+import espol.addon.Addon;
+
+public final class VacationPackage {
+	private final int numberOfTravelers;
+	private final Destination destination;
+	private final int durationInDays;
+	private final List<Addon> addons;
+
+	private final static int BASE_COST = 1000;
 
 	/**
 	 * Constructs a new VacationPackage with the specified number of travelers,
@@ -23,24 +30,28 @@ public final class VacationPackage {
 		this.numberOfTravelers = travelers;
 		this.destination = destination;
 		this.durationInDays = duration;
+		
+		this.addons = new LinkedList<>();
 	}
+	
+    public void addAddon(final Addon addon) {
+        addons.add(addon);
+    }
 
 	/**
 	 * Calculates the total cost of the vacation package.
 	 *
 	 * @return the total cost
 	 */
-	public final double calculateCost() {
-		double totalCost = this.BASE_COST;
+	public double calculateCost() {
+		double totalCost = BASE_COST;
 
 		totalCost += destination.calculateAddtionalCost();
 		totalCost += calculateGroupDiscount(totalCost);
 		totalCost += calculatePenaltyFee();
 		totalCost -= calculatePromotionPolicy();
+		totalCost += calculateAddOnsCost();
 
-//        if (numberOfTravelers > 80) {
-//            throw new NumbersOfTravelersExceeded("No se pueden agregar más de 80 personas al paquete de vacaciones.");
-//        }
 
 		return totalCost;
 	}
@@ -51,14 +62,15 @@ public final class VacationPackage {
 	 * @param cost the original cost before applying the discount
 	 * @return the discount amount
 	 */
-	private final double calculateGroupDiscount(final double cost) {
+	private double calculateGroupDiscount(final double cost) {
+		double result = 0;
 		if (numberOfTravelers > 4 && numberOfTravelers < 10) {
-			return cost * 0.1;
+			result = cost * 0.1;
 		} else if (numberOfTravelers > 10) {
-			return cost * 0.2;
+			result = cost * 0.2;
 		}
 
-		return 0;
+		return result;
 	}
 
 	/**
@@ -66,7 +78,7 @@ public final class VacationPackage {
 	 *
 	 * @return the penalty fee
 	 */
-	private final int calculatePenaltyFee() {
+	private int calculatePenaltyFee() {
 		return (durationInDays < 7) ? 200 : 0;
 	}
 
@@ -76,7 +88,16 @@ public final class VacationPackage {
 	 *
 	 * @return the promotion amount
 	 */
-	private final int calculatePromotionPolicy() {
+	private int calculatePromotionPolicy() {
 		return (durationInDays > 30 || numberOfTravelers == 2) ? 200 : 0;
+	}
+	
+	public double calculateAddOnsCost() {
+		double totalCost = 0;
+        for (final Addon addon : addons) {
+            totalCost += addon.getCost(numberOfTravelers);
+        }
+        
+        return totalCost;
 	}
 }
